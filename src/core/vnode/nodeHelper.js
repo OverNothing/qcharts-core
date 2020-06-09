@@ -68,7 +68,7 @@ export function animate(el, attrs) {
   }
 
   if (!el.parent) {
-    el.on('append', () => {
+    el.addEventListener('append', () => {
       setAnimation()
     })
   } else {
@@ -168,8 +168,8 @@ export function delegateEvent(el, attrs = {}) {
 
     const type = key.split('on')[1].toLowerCase()
     const cb = attrs[key] || (() => {})
-    el.off(type)
-    el.on(type, evt => cb(evt, el))
+    el.removeEventListener(type)
+    el.addEventListener(type, evt => cb(evt, el))
     delete attrs[key]
   })
 }

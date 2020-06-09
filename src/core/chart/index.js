@@ -37,6 +37,8 @@ export class Chart extends BaseNode {
     return {
       pos: [0, 0],
       size: ['100%', '100%'],
+      width: 300,
+      height: 150,
       forceFit: true,
       zoomable: false
     }
@@ -69,8 +71,8 @@ export class Chart extends BaseNode {
     const size = this.attr('size')
     const group = this[_plot].subPlot(pos, size)
     this.$group = group
-    this.attr('size', this.$group.attr('size'))
-    this.attr('pos', this.$group.attr('pos'))
+    this.attr('size', this.$group.attributes.size);
+    this.attr('pos', this.$group.attributes.pos);
   }
 
   setTheme(name) {

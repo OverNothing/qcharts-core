@@ -2,36 +2,6 @@ import { Group, Label, Rect } from 'spritejs'
 import { isArray, throttle, isFunction } from '../util'
 import { BasePlugin } from '../core'
 
-// function refixTooltipPosition(x, y, width, height, vw, vh, gap = 20) {
-//   x += gap
-//   y += gap
-//   let pos = [x, y]
-
-//   if (width > vw) {
-//     console.warn('宽度溢出，考虑折行！')
-//   } else {
-//     if (x + width > vw) {
-//       pos[0] = vw - width // x - ((x + width) - vw)
-//     }
-//   }
-
-//   if (height > vw) {
-//     console.warn('高度溢出！')
-//   } else {
-//     if (y + height > vh) {
-//       pos[1] = vh - height // y - ((y + height) - vh)
-//     }
-//   }
-
-//   pos.forEach((d, i) => {
-//     if (d <= 0) {
-//       pos[i] = gap
-//     }
-//   })
-
-//   return pos
-// }
-
 function refixTooltipPosition(x, y, w, h, vw, vh, gap = 10) {
   // 极坐标等坐标系
   if (x < vw / 2) {
@@ -102,7 +72,8 @@ export class Tooltip extends BasePlugin {
         if (!d) {
           !pos && this.setState({ hide: true }, true)
         } else {
-          let { layerX: x, layerY: y, data } = d
+          let { data } = d
+          let { layerX: x, layerY: y } = data.evt;
           const { hide } = this.state
           const [chartWidth, chartHieght] = this.chart.getSize()
           data = isArray(data) ? data : [data]
@@ -110,7 +81,7 @@ export class Tooltip extends BasePlugin {
             let self = this
             // 如果第一次出现，直接出现到当前位置
             // this.$group.attr('pos', [x, y])
-            this.$group.on('afterdraw', function fixPos() {
+            this.$group.addEventListener('afterdraw', function fixPos() {
               let { width, height } = self.getWidthAndHeight()
               setTimeout(() => {
                 self.setState({
@@ -159,7 +130,7 @@ export class Tooltip extends BasePlugin {
   getWidthAndHeight() {
     let [width, height] = this.$group.contentSize
     const [t, r, b, l] = this.$group.attr('padding')
-    const { width: borderWidth } = this.$group.attr('border')
+    const { borderWidth } = this.$group.attributes;
     width += r + l + 2 * borderWidth
     height += t + b + 2 * borderWidth
     return { width, height }
@@ -239,15 +210,15 @@ export class Tooltip extends BasePlugin {
     )
   }
   updated() {
-    const pos = this.state.pos
-    if (pos && pos.length) {
-      let width = this.$group['boundingRect'][2]
+    const pos = this.$group.attributes.pos
+    if (pos && pos.length && pos[0] !== 0 && pos[1] !== 0) {
+      let width = this.$group.attributes.pos[0]
       this.$group.attr({ width: width + 0.1 })
-      this.$group.transition(0.2).attr('pos', this.state.pos)
-      setTimeout(_ => {
-        // 触发reflow
-        this.$group.attr({ width: '' })
-      })
+      this.$group.transition(0.2).attr('pos', pos)
+      // setTimeout(_ => {
+      //   // 触发reflow
+      //   this.$group.attr({ width: '' })
+      // })
     }
   }
 }

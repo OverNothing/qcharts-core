@@ -132,7 +132,7 @@ export class Axis extends BasePlugin {
     let { pos } = el.attr()
     let { pos: oPos } = attrs
     if (pos && oPos && (pos[0] !== oPos[0] || pos[1] !== oPos[1])) {
-      el.reflow()
+      // el.reflow()
     }
   }
   mergeAttr($target, arr) {

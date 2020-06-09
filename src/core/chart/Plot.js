@@ -2,8 +2,6 @@ import { Group, Scene } from 'spritejs'
 import { isObject, debounce, convertPercent2Number, isWeixinApp } from '../../util'
 import ResizeObserver from './ResizeObserver'
 
-const isDev = process.env.NODE_ENV !== 'production'
-
 export class Plot {
   constructor(container, opts) {
     if (isObject(container)) {
@@ -34,9 +32,10 @@ export class Plot {
       let pixelRatio = opts.pixelRatio || 'px';
       this.scene = new Scene(Number(width) || null, Number(height) || null, pixelRatio);
     } else {
-      this.scene = new Scene(container, {
-        displayRatio: 'auto',
-        ...opts
+      this.scene = new Scene({
+        container,
+        displayRatio: '1',
+        ...opts,
       })
     }
     const layerID = opts.layer || 'default'
@@ -44,15 +43,6 @@ export class Plot {
       this.layer = this.scene.layer(layerID, opts.component)
     } else {
       this.layer = this.scene.layer(layerID)
-    }
-
-    if (isDev) {
-      this.layer.on('update', debounce(() => {
-        console.info(
-          `%c如果持续打印该信息，说明 layer 在不断重绘，需要找出问题！`,
-          'color: red'
-        )
-      }, 1000))
     }
 
     this.canvas = this.layer.canvas
@@ -65,7 +55,7 @@ export class Plot {
   forceFit() {
     if (isWeixinApp()) return; // ignored
     const onResize = (w, h) => {
-      this.scene.setViewport(w, h)
+      // this.scene.setViewport(w, h)
       this.scene.setResolution(w, h)
       this.plots.forEach(({ $group, pos, size }) => {
         $group.attr(this.recalculateLayout(pos, size))
@@ -87,7 +77,7 @@ export class Plot {
   }
 
   recalculateLayout([x, y], [width, height]) {
-    const viewport = this.scene.resolution
+    const viewport = Object.values(this.scene.getResolution());
     const pos = [x, y].map((n, i) => convertPercent2Number(n, viewport[i]))
     const size = [width, height].map((n, i) =>
       convertPercent2Number(n, viewport[i])

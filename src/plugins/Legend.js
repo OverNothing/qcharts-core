@@ -181,7 +181,7 @@ export class Legend extends BasePlugin {
   }
 
   paginatify() {
-    this.chart.layer.prepareRender().then(() => {
+    this.chart.layer.prepareRender.then(() => {
       const vertical = this.isVertical
       const rootSize = this.size
       const legendSize = (this.$refs['legends'] &&

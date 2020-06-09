@@ -80,7 +80,11 @@ export class Scatter extends BaseVisual {
     })
     this.chart.setCanvasCursor(cursorStyle || 'pointer')
     this.dataset.hoverData({
-      data: { color: attr.fillColor, ...attr.dataOrigin },
+      data: {
+        color: attr.fillColor,
+        evt: evt.originalEvent,
+        ...attr.dataOrigin,
+      },
       ...evt
     })
     const { showGuideLine } = this.attr()
@@ -281,13 +285,19 @@ export class Scatter extends BaseVisual {
               {...normalStyle}
               hoverState={hoverStyle}
               onMouseenter={(_, el) => {
-                el.attr('state', 'hover')
+                el.attr({
+                  state: 'hover',
+                })
+                console.log('onMouseEnter el', el);
+                // debugger
               }}
               onMousemove={(evt, el) => {
                 this.showTooltip(evt, { ...attr }, el)
               }}
               onMouseleave={(evt, el) => {
-                el.attr('state', 'normal')
+                el.attr({
+                  state: 'normal',
+                })
                 this.hideTooltip()
                 this.chart.setCanvasCursor('default')
               }}

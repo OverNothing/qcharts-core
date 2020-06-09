@@ -58,7 +58,7 @@ module.exports = {
     ]
   },
   externals: {
-    spritejs: 'spritejs',
+    // spritejs: 'spritejs',
     vue: 'Vue',
     'vue-router': 'VueRouter'
   },
