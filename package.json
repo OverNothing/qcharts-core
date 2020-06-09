@@ -83,7 +83,7 @@
     "scapegoat": "^1.0.0",
     "split.js": "^1.5.10",
     "sprite-core": "^2.31.3",
-    "spritejs": "^2.27.13",
+    "spritejs": "^3.7.19",
     "style-loader": "^0.23.1",
     "terser-webpack-plugin": "^2.1.0",
     "uglifyjs-webpack-plugin": "^2.1.2",
